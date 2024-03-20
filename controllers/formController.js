@@ -1,10 +1,18 @@
-const submitForm = (req, res) => {
+const Form = require(`../models/formModel`);
+
+const submitForm = async (req, res) => {
   try {
-    console.log(req.body);
-    res.send("form submitted");
+    const formObj = await Form.create(req.body);
+    res.status(201).json({
+      status: "success",
+      data: formObj,
+    });
   } catch (err) {
     console.log(err);
-    res.send(err);
+    res.status(400).json({
+      status: "failed",
+      error: err,
+    });
   }
 };
 

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const { default: mongoose } = require("mongoose");
 
 const formSchema = new mongoose.Schema({
   name: {
@@ -10,20 +10,18 @@ const formSchema = new mongoose.Schema({
     required: true,
   },
   adhaar: {
-    type: Number,
+    type: String,
     required: true,
   },
   phone: {
-    type: Number,
-    required: true,
-  },
-  Qr: {
     type: String,
     required: true,
+  },
+  qr: {
+    type: String,
   },
   formId: {
     type: String,
-    required: true,
   },
 });
 
