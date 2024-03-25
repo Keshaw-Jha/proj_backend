@@ -1,14 +1,18 @@
 const Form = require(`../models/formModel`);
+const { v4: uuidv4 } = require("uuid");
+const { addOtp } = require("./otpController");
 
 const submitForm = async (req, res) => {
   try {
-    const formObj = await Form.create(req.body);
+    const demoObj = { ...req.body, formId: uuidv4() };
+    const formObj = await Form.create(demoObj);
+    const testOtp = await addOtp(formObj.formId);
     res.status(201).json({
       status: "success",
       data: formObj,
+      otp: testOtp,
     });
   } catch (err) {
-    console.log(err);
     res.status(400).json({
       status: "failed",
       error: err,

@@ -1,7 +1,11 @@
-const getQr = (req, res) => {
+const Form = require("../models/formModel");
+
+const getQr = async (req, res) => {
   try {
-    console.log(req.body);
-    res.send("form submitted");
+    const tempObj = await Form.findOne({
+      formId: req.body.data,
+    });
+    res.status(200).send({ status: "success", data: tempObj });
   } catch (err) {
     console.log(err);
     res.send(err);
