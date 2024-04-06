@@ -18,14 +18,14 @@ const createQr = async (demoObj) => {
 
 const verifyOtp = async (req, res) => {
   try {
-    const { formId, otp } = req.body.data;
-    const otpRecord = await Otp.findOne({ formId, otp }, { upsert: false });
+    const { ticketId, otp } = req.body.data;
+    const otpRecord = await Otp.findOne({ ticketId, otp }, { upsert: false });
     console.log(req.body, otpRecord);
     if (!otpRecord) {
       return res.status(200).send(false);
     }
 
-    const formObj = await Form.findOne({ formId: otpRecord.formId });
+    const formObj = await Form.findOne({ ticketId: otpRecord.ticketId });
     if (!formObj) {
       return res.status(200).send(false);
     }
@@ -33,7 +33,7 @@ const verifyOtp = async (req, res) => {
     const qrCodeImage = await createQr(formObj);
 
     await Form.findOneAndUpdate(
-      { formId: formObj.formId },
+      { ticketId: formObj.ticketId },
       { $set: { qr: qrCodeImage } },
       { new: true }
     );
@@ -44,9 +44,9 @@ const verifyOtp = async (req, res) => {
   }
 };
 
-const addOtp = async (formId) => {
+const addOtp = async (ticketId) => {
   try {
-    const otpObj = { formId: formId, otp: generateOtp() };
+    const otpObj = { ticketId: ticketId, otp: generateOtp() };
     const response = await Otp.create(otpObj);
     return response;
   } catch (err) {

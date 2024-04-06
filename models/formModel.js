@@ -20,8 +20,18 @@ const formSchema = new mongoose.Schema({
   qr: {
     type: String,
   },
-  formId: {
+  ticketId: {
     type: String,
+  },
+  entryAt: {
+    type: Date,
+  },
+  exitAt: {
+    type: Date,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
   },
 });
 

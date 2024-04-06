@@ -1,11 +1,15 @@
 const { default: mongoose } = require("mongoose");
 
 const otpSchema = new mongoose.Schema({
-  formId: {
+  ticketId: {
     type: String,
   },
   otp: {
     type: String,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
   },
 });
 
