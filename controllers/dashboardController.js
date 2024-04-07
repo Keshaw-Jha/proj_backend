@@ -45,6 +45,7 @@ const getDashboardStats = async (req, res) => {
         activeUsers: ActiveUsers,
         ticketsBooked: TicketsBooked,
         totalExits: TotalExits,
+        unvisited: TicketsBooked - (TotalExits + ActiveUsers),
       },
     });
   } catch (err) {
