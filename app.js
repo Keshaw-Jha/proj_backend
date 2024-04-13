@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 app.options("*", cors());
 // ROUTES
 app.get(`/`, (req, res) => {
-  res.send(`<h1>Welcome to the backend</h1>`);
+  res.send("Welcome to the backend");
 });
 
 app.use("", userRoutes);
