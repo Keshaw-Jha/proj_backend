@@ -6,10 +6,11 @@ const dashboard = require("../controllers/dashboardController.js");
 
 const router = express.Router();
 
-router.post("/submitForm", form.submitForm);
-router.post("/submitOtp", otp.verifyOtp);
-router.post("/getQr", qr.getQr);
-router.get("/getTickets", dashboard.getTickets);
-router.get("/getStats", dashboard.getDashboardStats);
+router.post("/submitform", form.submitForm);
+router.post("/submitotp", otp.verifyOtp);
+router.post("/getqr", qr.getQr);
+router.get("/gettickets", dashboard.getTickets);
+router.get("/getstats", dashboard.getDashboardStats);
+router.post("/updateticketstatus", form.updateTicket);
 
 module.exports = router;
