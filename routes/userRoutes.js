@@ -14,6 +14,6 @@ router.get("/gettickets", dashboard.getTickets);
 router.get("/getstats", dashboard.getDashboardStats);
 router.post("/updateticketstatus", form.updateTicket);
 router.post("/signin", signIn.signInUser);
-router.post("/login", signIn.logInUser);
+router.post("/getin", signIn.logInUser);
 
 module.exports = router;
