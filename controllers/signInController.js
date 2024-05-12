@@ -36,29 +36,32 @@ const signInUser = async (req, res) => {
   }
 };
 
-const logInUser = async (req, res) => {
-  try {
-    const logInObj = { ...req.body };
-    const user = await findUser({
-      email: logInObj.email,
-      password: logInObj.password,
+const logInUser = (req, res) => {
+  const logInObj = { ...req.body };
+
+  findUser({
+    email: logInObj.email,
+    password: logInObj.password,
+  })
+    .then((user) => {
+      if (!user) {
+        return res
+          .status(404)
+          .json({ status: "failed", message: "User not found" });
+      }
+
+      const { password, ...userData } = user.toObject();
+      return res.status(200).json({
+        status: "success",
+        data: userData,
+      });
+    })
+    .catch((err) => {
+      return res.status(500).json({
+        status: "failed",
+        error: err.message,
+      });
     });
-    if (!user) {
-      return res
-        .status(404)
-        .json({ status: "failed", message: "User not found" });
-    }
-    const { password, ...userData } = user.toObject();
-    return res.status(200).json({
-      status: "success",
-      data: userData,
-    });
-  } catch (err) {
-    return res.status(500).json({
-      status: "failed",
-      error: err.message,
-    });
-  }
 };
 
 module.exports = { signInUser, logInUser };
