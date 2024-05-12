@@ -1,5 +1,7 @@
+const jwt = require("jsonwebtoken");
 const SignIn = require(`../models/signInModel`);
 const { v4: uuidv4 } = require("uuid");
+const secretKey = process.env.SECRET_KEY;
 
 const findUser = async (userObj) => {
   try {
@@ -49,10 +51,15 @@ const logInUser = (req, res) => {
           .status(404)
           .json({ status: "failed", message: "User not found" });
       }
+      user = user.toObject();
+      const token = jwt.sign(user, process.env.SECRET_KEY, {
+        expiresIn: "1h",
+      });
 
-      const { password, ...userData } = user.toObject();
+      const { password, ...userData } = user;
       return res.status(200).json({
         status: "success",
+        token: token,
         data: userData,
       });
     })
