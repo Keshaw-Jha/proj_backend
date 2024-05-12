@@ -7,13 +7,13 @@ const signIn = require("../controllers/signInController.js");
 
 const router = express.Router();
 
+router.get("/gettickets", dashboard.getTickets);
+router.get("/getstats", dashboard.getDashboardStats);
 router.post("/submitform", form.submitForm);
 router.post("/submitotp", otp.verifyOtp);
 router.post("/getqr", qr.getQr);
-router.get("/gettickets", dashboard.getTickets);
-router.get("/getstats", dashboard.getDashboardStats);
 router.post("/updateticketstatus", form.updateTicket);
 router.post("/signin", signIn.signInUser);
-router.post("/getin", signIn.logInUser);
+router.post("/login", signIn.logInUser);
 
 module.exports = router;

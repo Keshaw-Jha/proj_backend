@@ -1,6 +1,15 @@
 const SignIn = require(`../models/signInModel`);
 const { v4: uuidv4 } = require("uuid");
 
+const findUser = async (userObj) => {
+  try {
+    const user = await SignIn.findOne(userObj);
+    return user;
+  } catch (err) {
+    throw new Error("Database error");
+  }
+};
+
 const signInUser = async (req, res) => {
   try {
     const signInObj = { ...req.body, userId: uuidv4() };
@@ -49,15 +58,6 @@ const logInUser = async (req, res) => {
       status: "failed",
       error: err.message,
     });
-  }
-};
-
-const findUser = async (userObj) => {
-  try {
-    const user = await SignIn.findOne(userObj);
-    return user;
-  } catch (err) {
-    throw new Error("Database error");
   }
 };
 
