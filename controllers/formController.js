@@ -1,13 +1,27 @@
 const Form = require(`../models/formModel`);
 const { v4: uuidv4 } = require("uuid");
 const { addOtp } = require("./otpController");
+const { transporter } = require("../utils/emailService");
 
 const submitForm = async (req, res) => {
   try {
     const demoObj = { ...req.body, ticketId: uuidv4() };
     const formObj = await Form.create(demoObj);
     const testOtp = await addOtp(formObj.ticketId);
-    console.log("OTP: ", testOtp);
+    // if (formObj) {
+    //   await transporter.sendMail({
+    //     from: process.env.EMAIL_USER,
+    //     to: demoObj.email,
+    //     subject: "Pravesh OTP",
+    //     html: `<div>
+    //             <span>${demoObj.name} Your One Time Password is</span>
+    //             <h2>${testOtp.otp}</h2>
+    //           </div>`,
+    //   });
+    // }
+
+    console.log("hit");
+
     res.status(201).json({
       status: "success",
       data: formObj,
