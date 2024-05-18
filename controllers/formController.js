@@ -8,17 +8,17 @@ const submitForm = async (req, res) => {
     const demoObj = { ...req.body, ticketId: uuidv4() };
     const formObj = await Form.create(demoObj);
     const testOtp = await addOtp(formObj.ticketId);
-    // if (formObj) {
-    //   await transporter.sendMail({
-    //     from: process.env.EMAIL_USER,
-    //     to: demoObj.email,
-    //     subject: "Pravesh OTP",
-    //     html: `<div>
-    //             <span>${demoObj.name} Your One Time Password is</span>
-    //             <h2>${testOtp.otp}</h2>
-    //           </div>`,
-    //   });
-    // }
+    if (formObj) {
+      await transporter.sendMail({
+        from: "Pravesh_Systum@gmail.in",
+        to: demoObj.email,
+        subject: "Pravesh OTP",
+        html: `<div>
+                <span>${demoObj.name} Your One Time Password is</span>
+                <h2>${testOtp.otp}</h2>
+              </div>`,
+      });
+    }
 
     console.log("hit");
 

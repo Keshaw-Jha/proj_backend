@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const secretKey = process.env.SECRET_KEY;
+const config = require("../config.js");
 
 const authenticateToken = (req, res, next) => {
   const header = req.headers["authorization"];
@@ -11,7 +11,7 @@ const authenticateToken = (req, res, next) => {
     });
   }
   const token = header.split(" ")[1];
-  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+  jwt.verify(token, config.SECRET_KEY, (err, user) => {
     if (err) {
       return res.status(403).json({ status: "failed", message: "Forbidden" });
     }

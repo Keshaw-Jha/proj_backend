@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const SignIn = require(`../models/signInModel`);
 const { v4: uuidv4 } = require("uuid");
-const secretKey = process.env.SECRET_KEY;
+const config = require("../config.js");
 
 const findUser = async (userObj) => {
   try {
@@ -52,7 +52,7 @@ const logInUser = (req, res) => {
           .json({ status: "failed", message: "User not found" });
       }
       user = user.toObject();
-      const token = jwt.sign(user, process.env.SECRET_KEY, {
+      const token = jwt.sign(user, config.SECRET_KEY, {
         expiresIn: "1h",
       });
 
