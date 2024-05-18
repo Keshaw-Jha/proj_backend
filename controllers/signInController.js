@@ -38,9 +38,8 @@ const signInUser = async (req, res) => {
   }
 };
 
-const logInUser = (req, res) => {
+const logInUser = async (req, res) => {
   const logInObj = { ...req.body };
-
   findUser({
     email: logInObj.email,
     password: logInObj.password,
