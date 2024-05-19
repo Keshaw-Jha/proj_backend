@@ -37,4 +37,15 @@ We look forward to hosting you and ensuring a memorable experience. See you soon
   return commonLayout(body);
 };
 
-module.exports = { qrEmail, otpEmail };
+const durationAlert = (userObj) => {
+  const body = `<p style="text-align: center;">
+  <img src="https://img.icons8.com/ios-filled/50/FF204E/error.png" alt="Alert" style="width: 50px; height: 50px;"/>
+</p>
+<p>Hello ${userObj.name},</p>
+<p>You have exceeded your stay duration of <strong>${userObj.maxDuration} minutes</strong>.</p>
+<p style="color: #FF204E; font-weight: bold;">⚠️ Please note: Additional charges will apply if you stay beyond the next <strong>5 minutes</strong>.</p>
+<p>We kindly ask you to start planning your exit calmly to avoid crowding at the exits. Thank you for your cooperation and understanding.</p>`;
+  return commonLayout(body);
+};
+
+module.exports = { qrEmail, otpEmail, durationAlert };
