@@ -6,10 +6,10 @@ const { durationAlert } = require("../templates/email-templates");
 
 const getDuration = async () => {
   const maxDuration = await Setting.findOne({ key: "maxDuration" });
-  return maxDuration.value ?? null;
+  return maxDuration ? maxDuration.value : null;
 };
 
-const alertEmail = async (userObj) => {
+const sendAlertEmail = async (userObj) => {
   try {
     await transporter.sendMail({
       from: "Pravesh_Systum@gmail.in",
@@ -23,32 +23,41 @@ const alertEmail = async (userObj) => {
   }
 };
 
-// const getAlertEmails = async () => {
-//   const duration = await getDuration();
-//   const query = {
-//     entryAt: { $lt: new Date(Date.now() - duration * 60 * 1000) },
-//     $and: [{ exitAt: { $exists: false } }, { exitAt: "" }],
-//   };
-//   const users = await Form.find(query).lean();
-//   const excludeUsers = await Alert.find({}).lean();
+const getAlertEmails = async () => {
+  const duration = await getDuration();
+  if (!duration) {
+    throw new Error("Max duration not set");
+  }
+  const durationTime = new Date(Date.now() - duration * 60 * 1000);
 
-//   const finalUsers =
-// };
+  const excludeUsers = await Alert.find({}, "email").lean();
+  const excludeEmails = excludeUsers.map((user) => user.email);
+
+  const query = {
+    entryAt: { $lt: durationTime },
+    exitAt: { $exists: false, $eq: "" },
+    email: { $nin: excludeEmails },
+  };
+
+  const filteredUsers = await Form.find(query).lean();
+  return filteredUsers;
+};
 
 const sendAlerts = async () => {
   try {
-    const duration = await getDuration();
-    const query = {
-      entryAt: { $lt: new Date(Date.now() - duration * 60 * 1000) },
-      $and: [{ exitAt: { $exists: false } }, { exitAt: "" }],
-    };
-    const users = await Form.find(query).lean();
-    if (users && users.length > 0) {
-      for (const user of users) {
-        const tempObj = { ...user, maxDuration: duration };
-        await alertEmail(tempObj); // Pass the tempObj directly
+    const alertUsers = await getAlertEmails();
+
+    if (alertUsers && alertUsers.length > 0) {
+      for (const user of alertUsers) {
+        const tempObj = { ...user, maxDuration: await getDuration() };
+        await sendAlertEmail(tempObj);
       }
+      const setEmails = alertUsers.map((user) => ({
+        email: user.email,
+      }));
+      await Alert.insertMany(setEmails);
     }
+
     return;
   } catch (err) {
     console.log("err 💥", err);

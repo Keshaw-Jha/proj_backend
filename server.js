@@ -7,8 +7,8 @@ const schedule = require("node-schedule");
 
 const DB = config.DATABASE.replace("<password>", config.DATABASE_PASSWORD);
 
-const cronjob = () =>
-  schedule.scheduleJob("*/5   *    *    *    *", function () {
+const cronJob = () =>
+  schedule.scheduleJob("*/5  *   *    *    *    *", function () {
     sendAlerts();
   });
 
@@ -16,7 +16,7 @@ mongoose
   .connect(DB)
   .then(() => {
     console.log(`connected to ${colors.greenBright("DB")} 🌿`);
-    cronjob(); // cron job call
+    cronJob(); // cron job call
   })
   .catch((err) => console.log("server error", err));
 const port = config.PORT || 3001;

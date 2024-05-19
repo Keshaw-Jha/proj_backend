@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const AlertSchema = new mongoose.Schema({
-  Email: {
+  email: {
     type: String,
     rquired: true,
   },
