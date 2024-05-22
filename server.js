@@ -48,7 +48,7 @@ const emitDashboardStats = async () => {
   }
 };
 
-setInterval(emitDashboardStats, 3000);
+setInterval(emitDashboardStats, 5000);
 
 server.listen(port, () => {
   console.log(`app is running on port ${colors.greenBright(port)} 🖥️`);
