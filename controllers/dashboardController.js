@@ -1,4 +1,6 @@
+const { reset } = require("nodemon");
 const Form = require("../models/formModel");
+const Setting = require("../models/settingModel");
 
 const getTickets = async (req, res) => {
   try {
@@ -15,45 +17,23 @@ const getTickets = async (req, res) => {
   }
 };
 
-const getDashboardStats = async (req, res) => {
+const userSettings = async (req, res) => {
   try {
-    const ActiveUsers = await Form.countDocuments({
-      entryAt: { $exists: true },
-      $and: [{ exitAt: { $exists: false } }, { exitAt: "" }],
-    });
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const startOfToday = today;
-    const endOfToday = new Date(today);
-    endOfToday.setDate(endOfToday.getDate() + 1);
-    const TicketsBooked = await Form.countDocuments({
-      createdAt: {
-        $gte: startOfToday,
-        $lte: endOfToday,
-      },
-    });
-    const TotalExits = await Form.countDocuments({
-      exitAt: { $exists: true },
-      createdAt: {
-        $gte: startOfToday,
-        $lte: endOfToday,
-      },
-    });
+    const settings = await Setting.find({});
+    const settingObj = settings.reduce((acc, item) => {
+      acc[item.key] = item.value;
+      return acc;
+    }, {});
     res.status(200).json({
       status: "success",
-      data: {
-        activeUsers: ActiveUsers,
-        ticketsBooked: TicketsBooked,
-        totalExits: TotalExits,
-        unvisited: TicketsBooked - (TotalExits + ActiveUsers),
-      },
+      data: settingObj,
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(400).json({
       status: "failed",
       error: err,
     });
   }
 };
 
-module.exports = { getTickets, getDashboardStats };
+module.exports = { getTickets, userSettings };

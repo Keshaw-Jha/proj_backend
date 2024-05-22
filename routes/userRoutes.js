@@ -9,7 +9,7 @@ const { authenticateToken } = require("../middlewares/authenticateToken.js");
 const router = express.Router();
 
 router.get("/gettickets", authenticateToken, dashboard.getTickets);
-router.get("/getstats", authenticateToken, dashboard.getDashboardStats);
+router.get("/getsettings", authenticateToken, dashboard.userSettings);
 router.post("/submitform", form.submitForm);
 router.post("/submitotp", otp.verifyOtp);
 router.post("/getqr", qr.getQr);
