@@ -19,7 +19,7 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
     credentials: true,
   },
-  transports: ["websocket"],
+  transports: ["websocket", "polling"],
 });
 
 const cronJob = () =>
@@ -40,6 +40,9 @@ io.use(authenticateSocket);
 
 io.on("connection", (socket) => {
   console.log("a user connected");
+  socket.on("error", (err) => {
+    console.log("Socket error:", err);
+  });
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
