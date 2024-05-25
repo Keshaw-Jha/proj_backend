@@ -19,7 +19,10 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
     credentials: true,
   },
-  transports: ["websocket", "polling"],
+  reconnectionDelay: 1000,
+  reconnection: true,
+  reconnectionAttempts: 10,
+  transports: ["websocket"],
 });
 
 const cronJob = () =>
