@@ -6,7 +6,7 @@ const { sendAlerts } = require("./cron/sendAlert.js");
 const schedule = require("node-schedule");
 const { deleteOldRecords } = require("./utils/refreshService.js");
 const http = require("http");
-
+const { authenticateSocket } = require("./middlewares/authenticateToken.js");
 const { getDashboardStats } = require("./utils/dashboardStats.js");
 
 const DB = config.DATABASE.replace("<password>", config.DATABASE_PASSWORD);
@@ -17,6 +17,7 @@ const io = new Server(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
@@ -33,6 +34,8 @@ mongoose
     deleteOldRecords(); // cron job call
   })
   .catch((err) => console.log("server error", err));
+
+io.use(authenticateSocket);
 
 io.on("connection", (socket) => {
   console.log("a user connected");
