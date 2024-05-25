@@ -18,11 +18,11 @@ const io = new Server(server, {
     origin: "*",
     methods: ["GET", "POST"],
   },
-  transports: ["polling"],
+  transports: ["polling"], // Force polling transport
 });
 
 const cronJob = () =>
-  schedule.scheduleJob("*/5   *    *    *    *", function () {
+  schedule.scheduleJob("*/5 * * * *", function () {
     sendAlerts();
   });
 
@@ -35,26 +35,35 @@ mongoose
   })
   .catch((err) => console.log("server error", err));
 
-//io.use(authenticateSocket);
+// io.use(authenticateSocket); // Uncomment this if you need to authenticate socket connections
 
 io.on("connection", (socket) => {
   console.log("a user connected");
-  socket.on("error", (err) => {
-    console.log("Socket error:", err);
-  });
+
+  // Handle client disconnect
   socket.on("disconnect", () => {
     console.log("user disconnected");
+  });
+
+  // Handle socket errors
+  socket.on("error", (err) => {
+    console.log("Socket error:", err);
   });
 });
 
 const emitDashboardStats = async () => {
-  const stats = await getDashboardStats();
-  if (stats) {
-    io.emit("dashboardStats", stats);
+  try {
+    const stats = await getDashboardStats();
+    if (stats) {
+      io.emit("dashboardStats", stats);
+    }
+  } catch (error) {
+    console.error("Failed to get dashboard stats:", error);
   }
 };
 
-setInterval(emitDashboardStats, 5000);
+// Emit dashboard stats every 5 seconds
+setInterval(emitDashboardStats, 3000);
 
 server.listen(port, () => {
   console.log(`app is running on port ${colors.greenBright(port)} 🖥️`);
