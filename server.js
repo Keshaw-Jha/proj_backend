@@ -15,10 +15,11 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: "*", // Replace with your frontend URL
     methods: ["GET", "POST"],
   },
-  transports: ["polling"], // Force polling transport
+  transports: ["polling", "websocket"], // Allow both transports
+  allowEIO3: true, // Enable support for older clients if needed
 });
 
 const cronJob = () =>
@@ -39,6 +40,9 @@ mongoose
 
 io.on("connection", (socket) => {
   console.log("a user connected");
+
+  // Emit initial stats on connection
+  emitDashboardStats();
 
   // Handle client disconnect
   socket.on("disconnect", () => {
