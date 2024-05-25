@@ -15,15 +15,14 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
-    origin: "*", // Replace with your frontend URL
+    origin: "*",
     methods: ["GET", "POST"],
+    credentials: true,
   },
-  transports: ["polling", "websocket"], // Allow both transports
-  allowEIO3: true, // Enable support for older clients if needed
 });
 
 const cronJob = () =>
-  schedule.scheduleJob("*/5 * * * *", function () {
+  schedule.scheduleJob("*/5  *   *    *    *    *", function () {
     sendAlerts();
   });
 
@@ -36,38 +35,24 @@ mongoose
   })
   .catch((err) => console.log("server error", err));
 
-// io.use(authenticateSocket); // Uncomment this if you need to authenticate socket connections
+io.use(authenticateSocket);
 
 io.on("connection", (socket) => {
   console.log("a user connected");
-
-  // Emit initial stats on connection
   emitDashboardStats();
-
-  // Handle client disconnect
   socket.on("disconnect", () => {
     console.log("user disconnected");
-  });
-
-  // Handle socket errors
-  socket.on("error", (err) => {
-    console.log("Socket error:", err);
   });
 });
 
 const emitDashboardStats = async () => {
-  try {
-    const stats = await getDashboardStats();
-    if (stats) {
-      io.emit("dashboardStats", stats);
-    }
-  } catch (error) {
-    console.error("Failed to get dashboard stats:", error);
+  const stats = await getDashboardStats();
+  if (stats) {
+    io.emit("dashboardStats", stats);
   }
 };
 
-// Emit dashboard stats every 5 seconds
-setInterval(emitDashboardStats, 3000);
+setInterval(emitDashboardStats, 5000);
 
 server.listen(port, () => {
   console.log(`app is running on port ${colors.greenBright(port)} 🖥️`);
