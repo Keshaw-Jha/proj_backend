@@ -17,8 +17,8 @@ const io = new Server(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
-    // credentials: true,
   },
+  transports: ["polling"],
 });
 
 const cronJob = () =>
