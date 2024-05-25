@@ -23,7 +23,7 @@ const io = new Server(server, {
 });
 
 const cronJob = () =>
-  schedule.scheduleJob("*/5  *   *    *    *    *", function () {
+  schedule.scheduleJob("*/5   *    *    *    *", function () {
     sendAlerts();
   });
 
