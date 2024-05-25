@@ -17,12 +17,8 @@ const io = new Server(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
-    credentials: true,
+    // credentials: true,
   },
-  reconnectionDelay: 1000,
-  reconnection: true,
-  reconnectionAttempts: 10,
-  transports: ["websocket"],
 });
 
 const cronJob = () =>
@@ -39,7 +35,7 @@ mongoose
   })
   .catch((err) => console.log("server error", err));
 
-io.use(authenticateSocket);
+//io.use(authenticateSocket);
 
 io.on("connection", (socket) => {
   console.log("a user connected");
