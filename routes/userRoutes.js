@@ -10,10 +10,11 @@ const router = express.Router();
 
 router.get("/gettickets", authenticateToken, dashboard.getTickets);
 router.get("/getsettings", authenticateToken, dashboard.userSettings);
+router.post("/updatesettings", authenticateToken, dashboard.updateSettings);
 router.post("/submitform", form.submitForm);
 router.post("/submitotp", otp.verifyOtp);
 router.post("/getqr", qr.getQr);
-router.post("/updateticketstatus", form.updateTicket);
+router.post("/updateticketstatus", authenticateToken, form.updateTicket);
 router.post("/signin", signIn.signInUser);
 router.post("/login", signIn.logInUser);
 

@@ -36,4 +36,27 @@ const userSettings = async (req, res) => {
   }
 };
 
-module.exports = { getTickets, userSettings };
+const updateSettings = async (req, res) => {
+  try {
+    const settingObj = req.body.data;
+    for (elem in settingObj) {
+      const doc = await Setting.findOneAndUpdate(
+        { key: elem },
+        { value: settingObj[elem] },
+        { new: true }
+      );
+    }
+    res.status(200).json({
+      status: "success",
+      data: settingObj,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      status: "failed",
+      error: err,
+    });
+  }
+};
+
+module.exports = { getTickets, userSettings, updateSettings };
